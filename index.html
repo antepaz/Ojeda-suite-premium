@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terraza Ojeda Suite | Alta Cocina & Coctelería</title>
+<meta name="description" content="Vive una experiencia de altura en Ciudad Ojeda. Los mejores platos, cócteles y un ambiente inigualable.">
+
+<!-- ================= OPEN GRAPH ================= -->
+<meta property="og:title" content="Terraza Ojeda Suite 🍹 | Experiencia de Altura">
+<meta property="og:description" content="Disfruta de la mejor gastronomía y coctelería en un ambiente exclusivo en Ciudad Ojeda.">
+<meta property="og:image" content="https://i.postimg.cc/rsvfXBb6/1793812701008.jpg">
+<meta property="og:url" content="https://ojeda-suite-demo.netlify.app/">
+<meta property="og:type" content="website">
+<!-- ============================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================
+     SISTEMA DE DISEÑO (TOKENS)
+     ========================================= */
+  :root {
+    --bg-base: #050505;
+    --bg-surface: #0a0a0a;
+    --bg-elevated: #141414;
+    --accent: #d48a5a; 
+    --accent-glow: rgba(212, 138, 90, 0.4);
+    --text-main: #f0f0f0;
+    --text-muted: #888888;
+    --border: rgba(255, 255, 255, 0.08);
+    
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-sans: 'Inter', sans-serif;
+    
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    
+    --pad-section: clamp(80px, 12vw, 160px);
+    --pad-x: clamp(20px, 5vw, 60px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  html { 
+    scroll-behavior: smooth; 
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none; /* Cursor personalizado */
+  }
+
+  /* Grano cinematográfico */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+
+  h1, h2, h3, h4, .serif { font-family: var(--font-serif); font-weight: 600; }
+  .italic { font-style: italic; }
+  
+  a { color: inherit; text-decoration: none; cursor: none; }
+  button { cursor: none; font-family: inherit; }
+  
+  .contenedor { width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 var(--pad-x); }
+
+  /* =========================================
+     CURSOR PERSONALIZADO
+     ========================================= */
+  .cursor-dot, .cursor-ring {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 10000;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+  .cursor-dot {
+    width: 6px; height: 6px; background-color: var(--accent);
+    transition: width 0.3s, height 0.3s;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2);
+    transition: width 0.4s var(--ease-out), height 0.4s var(--ease-out), border-color 0.4s;
+  }
+  .cursor-hover .cursor-dot { width: 12px; height: 12px; }
+  .cursor-hover .cursor-ring { width: 60px; height: 60px; border-color: var(--accent); }
+  
+  @media (hover: none) and (pointer: coarse) {
+    body, a, button { cursor: auto; }
+    .cursor-dot, .cursor-ring { display: none; }
+  }
+
+  /* =========================================
+     NAVEGACIÓN
+     ========================================= */
+  header {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 9000;
+    padding: 24px 0;
+    transition: all 0.5s var(--ease-out);
+    border-bottom: 1px solid transparent;
+  }
+  header.scrolled {
+    padding: 16px 0;
+    background: rgba(5, 5, 5, 0.6);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .nav { display: flex; align-items: center; justify-content: space-between; }
+  
+  .logo-container { display: flex; align-items: center; gap: 12px; }
+  .logo-img { 
+    height: 44px; width: 44px; border-radius: 50%; object-fit: cover; 
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: transform 0.5s var(--ease-out);
+  }
+  .logo-text { font-family: var(--font-serif); font-size: 20px; letter-spacing: 2px; text-transform: uppercase; }
+  .logo-container:hover .logo-img { transform: rotate(15deg) scale(1.05); }
+  
+  .nav-links { display: flex; gap: 40px; align-items: center; }
+  .nav-links a {
+    font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px;
+    position: relative; padding: 8px 0; color: var(--text-muted);
+    transition: color 0.3s var(--ease-out);
+  }
+  .nav-links a:hover { color: var(--text-main); }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px;
+    background: var(--accent); transform: scaleX(0); transform-origin: right;
+    transition: transform 0.4s var(--ease-out);
+  }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+  .btn-nav {
+    background: transparent; color: var(--text-main); padding: 12px 28px; 
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 100px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    transition: all 0.4s var(--ease-out); position: relative; overflow: hidden;
+  }
+  .btn-nav span { position: relative; z-index: 2; }
+  .btn-nav::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--accent); transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.4s var(--ease-out); z-index: 1;
+  }
+  .btn-nav:hover { border-color: var(--accent); color: #000; }
+  .btn-nav:hover::before { transform: scaleY(1); }
+
+  .hamburger-btn { display: none; background: none; border: none; color: var(--text-main); font-size: 24px; }
+
+  /* Menú Móvil */
+  .mobile-menu {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background: var(--bg-base); z-index: 8999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+    opacity: 0; visibility: hidden; transition: all 0.5s var(--ease-out);
+    backdrop-filter: blur(10px);
+  }
+  .mobile-menu.activo { opacity: 1; visibility: visible; }
+  .mobile-menu a { font-family: var(--font-serif); font-size: 32px; font-style: italic; color: var(--text-main); }
+
+  @media(max-width: 900px) { 
+    .nav-links { display: none; }
+    .hamburger-btn { display: block; position: relative; z-index: 9001; }
+  }
+
+  /* =========================================
+     HERO SECTION
+     ========================================= */
+  .hero {
+    position: relative; height: 100vh; min-height: 650px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    overflow: hidden;
+  }
+  
+  /* SOLUCIÓN 1: Fondo con desenfoque (blur) más pronunciado */
+  .hero-bg {
+    position: absolute; inset: -5%; z-index: -2;
+    background: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    filter: brightness(0.35) saturate(0.7) blur(8px); /* Desenfoque añadido */
+    animation: slowZoom 20s ease-out infinite alternate;
+  }
+  @keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+  .hero-overlay {
+    position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(circle at center, transparent 0%, var(--bg-base) 100%),
+                linear-gradient(to bottom, transparent 50%, var(--bg-base) 100%);
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 20px; margin-top: 40px; }
+  
+  .hero-subtitle { 
+    display: block; color: var(--accent); font-size: 12px; font-weight: 600; 
+    letter-spacing: 5px; text-transform: uppercase; margin-bottom: 24px;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 1s var(--ease-out) 0.2s forwards;
+  }
+  
+  .hero h1 { 
+    font-size: clamp(44px, 8vw, 96px); line-height: 1.05; margin-bottom: 30px; 
+    font-style: italic; font-weight: 400;
+  }
+  .hero h1 .line { display: block; overflow: hidden; padding-bottom: 10px; }
+  .hero h1 .line span {
+    display: block; transform: translateY(110%);
+    animation: lineUp 1.2s var(--ease-out) forwards;
+  }
+  .hero h1 .line:nth-child(1) span { animation-delay: 0.4s; }
+  .hero h1 .line:nth-child(2) span { animation-delay: 0.55s; }
+
+  .hero p { 
+    font-size: clamp(16px, 2vw, 20px); font-weight: 300; color: #ccc; 
+    max-width: 600px; margin: 0 auto 40px; line-height: 1.8;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 1s var(--ease-out) 0.8s forwards;
+  }
+
+  .hero-botones { 
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 1s var(--ease-out) 1s forwards;
+  }
+  
+  .btn-hero { 
+    padding: 16px 36px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; 
+    transition: all 0.4s var(--ease-out); border-radius: 100px; position: relative; overflow: hidden;
+  }
+  .btn-hero-primario { background: var(--accent); color: #000; border: 1px solid var(--accent); }
+  .btn-hero-primario:hover { background: #fff; border-color: #fff; box-shadow: 0 10px 30px var(--accent-glow); }
+  .btn-hero-outline { background: transparent; color: var(--text-main); border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px); }
+  .btn-hero-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes lineUp { to { transform: translateY(0); } }
+
+  .scroll-hint {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted);
+    opacity: 0; animation: fadeUp 1s var(--ease-out) 1.5s forwards;
+  }
+  .scroll-hint .line { width: 1px; height: 40px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden; }
+  .scroll-hint .line::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+    background: var(--accent); animation: scrollLine 2s infinite ease-in-out;
+  }
+  @keyframes scrollLine { 0% { transform: translateY(-100%); } 100% { transform: translateY(200%); } }
+
+  /* SOLUCIÓN 2: Ocultar el scroll hint en móviles para evitar sobreposición */
+  @media (max-width: 768px) {
+    .scroll-hint { display: none; }
+    .hero { min-height: 100vh; padding-bottom: 40px; }
+    .hero-botones { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
+    .btn-hero { width: 100%; }
+  }
+
+  /* =========================================
+     SECCIONES GENERALES
+     ========================================= */
+  section { padding: var(--pad-section) 0; position: relative; }
+  
+  .section-header { text-align: center; margin-bottom: clamp(40px, 6vw, 80px); }
+  .section-header h2 { 
+    font-size: clamp(36px, 5vw, 56px); font-style: italic; font-weight: 400; 
+    margin-bottom: 20px; line-height: 1.1;
+  }
+  .section-header .linea { width: 1px; height: 40px; background: var(--accent); margin: 0 auto 24px; opacity: 0.5; }
+  .section-header p { color: var(--text-muted); font-size: clamp(15px, 1.5vw, 18px); max-width: 600px; margin: 0 auto; font-weight: 300; }
+
+  /* Revelar al scroll */
+  .reveal { opacity: 0; transform: translateY(40px); transition: all 1s var(--ease-out); filter: blur(5px); }
+  .reveal.active { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+  /* =========================================
+     MENÚ CATEGORÍAS
+     ========================================= */
+  /* SOLUCIÓN 3: Grilla 2x2 en móvil (4 visibles) y 4 columnas en PC */
+  .grid-categorias { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil (4 visibles en pantalla) */
+    gap: 15px; 
+  }
+  
+  @media(min-width: 768px) {
+    .grid-categorias { 
+      grid-template-columns: repeat(4, 1fr); /* 4 columnas en escritorio */
+      gap: 20px; 
+    }
+  }
+
+  .cat-card { 
+    position: relative; border-radius: 16px; overflow: hidden; cursor: none; 
+    height: 200px; /* Altura reducida para móvil */
+    background: var(--bg-surface); border: 1px solid var(--border);
+    transition: transform 0.6s var(--ease-out), border-color 0.4s;
+  }
+  
+  @media(min-width: 768px) {
+    .cat-card { height: 300px; }
+  }
+
+  .cat-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+  .cat-card img { 
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.6; 
+    transition: transform 0.8s var(--ease-out), opacity 0.4s; 
+  }
+  .cat-card:hover img { transform: scale(1.05); opacity: 0.8; }
+  
+  /* Efecto Spotlight */
+  .cat-card::before {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212,138,90,0.15), transparent 40%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .cat-card:hover::before { opacity: 1; }
+
+  .cat-info {
+    position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px;
+    background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.5) 60%, transparent 100%);
+    z-index: 2; display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .cat-info h3 { 
+    font-size: 18px; font-style: italic; font-weight: 400; 
+    transition: transform 0.4s var(--ease-out); line-height: 1.2;
+  }
+  .cat-info span { font-size: 16px; color: var(--accent); transform: rotate(-45deg); transition: transform 0.4s var(--ease-out); }
+  
+  @media(min-width: 768px) {
+    .cat-info { padding: 24px; }
+    .cat-info h3 { font-size: 24px; }
+    .cat-info span { font-size: 20px; }
+  }
+
+  .cat-card:hover .cat-info h3 { transform: translateX(5px); }
+  .cat-card:hover .cat-info span { transform: rotate(0deg) translateX(5px); }
+
+  /* =========================================
+     PÁGINA DE CATEGORÍA (SPA)
+     ========================================= */
+  #pagina-categoria {
+    display: none; min-height: 100vh; padding-top: 140px; padding-bottom: 100px;
+    background-color: var(--bg-base); position: relative; z-index: 10;
+  }
+  .animar-pagina { animation: slideUpPage 0.8s var(--ease-out) forwards; }
+  @keyframes slideUpPage {
+    from { opacity: 0; transform: translateY(40px); filter: blur(10px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+
+  .header-categoria { margin-bottom: 60px; text-align: center; }
+  .btn-volver { 
+    background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-main); 
+    padding: 12px 24px; border-radius: 100px; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 30px; transition: all 0.3s; display: inline-flex; gap: 10px; align-items: center;
+  }
+  .btn-volver:hover { background: var(--text-main); color: var(--bg-base); }
+  .titulo-categoria-page { font-size: clamp(40px, 6vw, 64px); font-style: italic; font-weight: 400; }
+
+  .grid-menu { display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
+  @media(min-width: 768px) { .grid-menu { grid-template-columns: 1fr 1fr; gap: 40px 30px; } }
+  
+  .menu-item { 
+    display: flex; gap: 20px; align-items: center; padding: 15px; 
+    border-radius: 12px; transition: background 0.3s;
+  }
+  .menu-item:hover { background: rgba(255,255,255,0.03); }
+  .menu-img { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; filter: brightness(0.8); }
+  .menu-info { flex: 1; }
+  .menu-info h4 { font-size: 20px; font-weight: 400; margin-bottom: 5px; }
+  .menu-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5; }
+  .menu-info .precio { font-family: var(--font-serif); font-size: 20px; color: var(--accent); font-style: italic; }
+
+  /* =========================================
+     EL AMBIENTE (CARRUSEL)
+     ========================================= */
+  .carrusel-wrapper { position: relative; max-width: 1100px; margin: 0 auto; overflow: hidden; border-radius: 20px; }
+  .carrusel-track { 
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory; 
+    scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth;
+  }
+  .carrusel-track::-webkit-scrollbar { display: none; }
+  
+  .carrusel-item { 
+    flex: 0 0 100%; scroll-snap-align: center; position: relative; height: 60vh; min-height: 400px;
+  }
+  .carrusel-item img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
+  .carrusel-item .overlay-text { 
+    position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 40px 40px; 
+    background: linear-gradient(to top, rgba(5,5,5,0.95), transparent); 
+    font-family: var(--font-serif); font-size: clamp(24px, 4vw, 40px); font-style: italic; 
+  }
+  
+  .carrusel-btn { 
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; 
+    background: rgba(5,5,5,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); 
+    color: white; width: 50px; height: 50px; border-radius: 50%; cursor: none; 
+    display: flex; justify-content: center; align-items: center; font-size: 20px; 
+    transition: all 0.3s;
+  }
+  .carrusel-btn:hover { background: var(--accent); border-color: var(--accent); color: #000; }
+  .carrusel-btn.prev { left: 20px; }
+  .carrusel-btn.next { right: 20px; }
+  
+  .carrusel-dots { display: flex; justify-content: center; gap: 12px; margin-top: 30px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: none; transition: all 0.4s; }
+  .dot.active { background: var(--accent); transform: scale(1.5); }
+
+  /* =========================================
+     EXPERIENCIA (PARALLAX)
+     ========================================= */
+  .experiencia { 
+    position: relative; padding: 150px 0; text-align: center;
+    background: url('https://images.unsplash.com/photo-1543007630-9710e4a00a20?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+  }
+  .experiencia::before {
+    content: ''; position: absolute; inset: 0; background: rgba(5,5,5,0.85); z-index: 0;
+  }
+  .experiencia .contenedor { position: relative; z-index: 1; }
+  .experiencia h2 { font-size: clamp(40px, 6vw, 64px); font-style: italic; margin-bottom: 24px; font-weight: 400; }
+  .experiencia p { font-size: 18px; color: #ccc; max-width: 600px; margin: 0 auto 40px auto; font-weight: 300; }
+
+  /* =========================================
+     UBICACIÓN
+     ========================================= */
+  .ubicacion-box { 
+    max-width: 800px; margin: 0 auto; background: rgba(20,20,20,0.6); backdrop-filter: blur(20px);
+    padding: 60px 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
+    text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+  }
+  .ubicacion-box::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .ubicacion-box h3 { font-size: 32px; font-style: italic; margin-bottom: 20px; font-weight: 400; }
+  .ubicacion-box p { color: var(--text-muted); margin-bottom: 30px; font-size: 16px; }
+  .ubicacion-box p span { color: var(--accent); font-weight: 500; }
+  
+  .btn-maps { 
+    display: inline-flex; justify-content: center; align-items: center; gap: 12px;
+    background: transparent; color: var(--text-main); padding: 16px 36px; 
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; font-size: 13px; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase; transition: all 0.4s var(--ease-out);
+  }
+  .btn-maps:hover { background: var(--text-main); color: var(--bg-base); }
+  .btn-maps svg { width: 20px; height: 20px; fill: currentColor; }
+  
+  /* =========================================
+     FOOTER
+     ========================================= */
+  footer { padding: 80px 0 40px; text-align: center; border-top: 1px solid var(--border); background: var(--bg-base); }
+  .footer-logo { height: 60px; width: 60px; object-fit: cover; margin-bottom: 24px; border-radius: 50%; filter: grayscale(1); transition: filter 0.4s; }
+  .footer-logo:hover { filter: grayscale(0); }
+  
+  .footer-social { display: flex; justify-content: center; gap: 24px; margin-bottom: 30px; }
+  .footer-social a { color: var(--text-muted); transition: color 0.3s, transform 0.3s; }
+  .footer-social a:hover { color: var(--accent); transform: translateY(-3px); }
+  .footer-social svg { width: 24px; height: 24px; }
+  
+  footer p { font-size: 12px; color: #555; letter-spacing: 1px; }
+
+  /* =========================================
+     MODAL RESERVA
+     ========================================= */
+  .modal-overlay { 
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; 
+    opacity: 0; visibility: hidden; transition: opacity 0.5s; backdrop-filter: blur(10px); 
+  }
+  .modal-overlay.activo { opacity: 1; visibility: visible; }
+  
+  .modal-reserva { 
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.95); 
+    background: var(--bg-surface); width: 90%; max-width: 440px; border-radius: 24px; padding: 40px; 
+    z-index: 10001; box-shadow: 0 40px 100px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); 
+    opacity: 0; visibility: hidden; transition: all 0.6s var(--ease-out); 
+  }
+  .modal-reserva.activo { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+  .modal-reserva h3 { font-size: 32px; font-style: italic; margin-bottom: 8px; text-align: center; font-weight: 400; }
+  .modal-reserva > p { font-size: 13px; text-align: center; color: var(--text-muted); margin-bottom: 30px; }
+  
+  .form-group { margin-bottom: 20px; position: relative; }
+  .form-group label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
+  .form-group input { 
+    width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.03); 
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--text-main); 
+    font-family: var(--font-sans); font-size: 15px; transition: border-color 0.3s;
+  }
+  .form-group input:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.05); }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; cursor: none; }
+  
+  .btn-cerrar-modal { 
+    position: absolute; top: 20px; right: 20px; background: none; border: none; 
+    color: var(--text-muted); font-size: 20px; transition: color 0.3s;
+  }
+  .btn-cerrar-modal:hover { color: var(--text-main); }
+  
+  .btn-wa { 
+    width: 100%; background: var(--accent); color: #000; border: none; padding: 16px; 
+    font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; 
+    border-radius: 8px; display: flex; justify-content: center; align-items: center; gap: 10px; 
+    transition: background 0.3s, transform 0.2s; margin-top: 20px; 
+  }
+  .btn-wa:hover { background: #fff; transform: translateY(-2px); }
+
+  /* Ocultar Netlify Badge */
+  iframe[src*="netlify"], iframe[title*="Netlify"], .netlify-badge,
+  div[id*="netlify"], a[href*="netlify.com"][target="_blank"],
+  div[style*="position: fixed"][style*="bottom: 0px"][style*="right: 0px"] {
+    display: none !important; visibility: hidden !important; opacity: 0 !important;
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR PERSONALIZADO -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- PÁGINA PRINCIPAL -->
+<div id="pagina-principal">
+
+    <header id="mainHeader">
+      <div class="contenedor">
+        <nav class="nav">
+          <a href="#" class="logo-container" onclick="window.scrollTo(0,0)">
+            <img src="https://i.postimg.cc/rsvfXBb6/1793812701008.jpg" alt="Terraza Ojeda Suite" class="logo-img"> 
+            <span class="logo-text">Ojeda Suite</span>
+          </a>
+          
+          <div class="nav-links">
+            <a href="#menu">Menú</a>
+            <a href="#ambiente">El Ambiente</a>
+            <a href="#experiencia">Experiencia</a>
+            <a href="#ubicacion">Ubicación</a> 
+            <a onclick="abrirModal()" class="btn-nav"><span>Reservar Mesa</span></a>
+          </div>
+
+          <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- MENÚ MÓVIL -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#menu" onclick="cerrarMenu()">Menú</a>
+      <a href="#ambiente" onclick="cerrarMenu()">El Ambiente</a>
+      <a href="#experiencia" onclick="cerrarMenu()">Experiencia</a>
+      <a href="#ubicacion" onclick="cerrarMenu()">Ubicación</a> 
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="hero-subtitle">Bar & Grill de Autor</span> 
+        <h1>
+          <span class="line"><span>Vive una experiencia</span></span>
+          <span class="line"><span>de altura.</span></span>
+        </h1>
+        <p>La mejor gastronomía, coctelería de autor y el ambiente más exclusivo de Ciudad Ojeda. Todos los días desde las 6:00 PM.</p>
+        <div class="hero-botones">
+          <a href="#menu" class="btn-hero btn-hero-primario">Descubrir el Menú</a>
+          <a onclick="abrirModal()" class="btn-hero btn-hero-outline">Reservar Ahora</a>
+        </div>
+      </div>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="line"></div>
+      </div>
+    </section>
+
+    <!-- MENÚ -->
+    <section id="menu">
+      <div class="contenedor">
+        <div class="section-header reveal">
+          <h2>Nuestra Carta</h2>
+          <div class="linea"></div>
+          <p>Selecciona una categoría para descubrir los sabores que hacen única a la Terraza.</p>
+        </div>
+
+        <div class="grid-categorias reveal" id="vistaCategorias">
+          
+          <div class="cat-card" onclick="abrirCategoria('entradas', 'Entradas')">
+            <img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Entradas">
+            <div class="cat-info"><h3>Entradas</h3><span>→</span></div>
+          </div>
+          
+          <div class="cat-card" onclick="abrirCategoria('ensaladas', 'Ensaladas')">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Ensaladas">
+            <div class="cat-info"><h3>Ensaladas</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('hamburguesas', 'Hamburguesas')">
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Hamburguesas">
+            <div class="cat-info"><h3>Hamburguesas</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('sandwiches', 'Sandwiches')">
+            <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Sandwiches">
+            <div class="cat-info"><h3>Sandwiches</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('pizzas', 'Pizzas')">
+            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Pizzas">
+            <div class="cat-info"><h3>Pizzas</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('adicionales', 'Adicionales')">
+            <img src="https://images.unsplash.com/photo-1576107232684-1279f390859f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Adicionales">
+            <div class="cat-info"><h3>Adicionales</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('parrillas', 'Parrillas')">
+            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Parrillas">
+            <div class="cat-info"><h3>Parrillas</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('fuertes', 'Platos Fuertes')">
+            <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Platos Fuertes">
+            <div class="cat-info"><h3>Platos Fuertes</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('cocteles', 'Cócteles')">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cócteles">
+            <div class="cat-info"><h3>Cócteles</h3><span>→</span></div>
+          </div>
+
+          <div class="cat-card" onclick="abrirCategoria('licores', 'Licores')">
+            <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Licores">
+            <div class="cat-info"><h3>Licores</h3><span>→</span></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- AMBIENTE -->
+    <section id="ambiente" style="background-color: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="contenedor">
+        <div class="section-header reveal">
+          <h2>El Ambiente</h2>
+          <div class="linea"></div>
+          <p>La mejor vista de la ciudad, luces cálidas y el espacio perfecto para tus noches especiales.</p>
+        </div>
+
+        <div class="carrusel-wrapper reveal">
+          <button class="carrusel-btn prev" onclick="moverCarrusel(-1)">❮</button>
+          <button class="carrusel-btn next" onclick="moverCarrusel(1)">❯</button>
+          
+          <div class="carrusel-track" id="carruselTrack">
+            <div class="carrusel-item">
+              <img src="https://i.postimg.cc/zBRRtNV5/Screenshot-2026-11-04-17-46-31-692-com-android-chrome-2.jpg" alt="Noches de Terraza">
+              <div class="overlay-text">Noches de Terraza</div>
+            </div>
+            <div class="carrusel-item">
+              <img src="https://i.postimg.cc/J7ZkjRfX/Screenshot-2026-11-04-17-46-10-055-com-android-chrome-2.jpg" alt="Vista de Altura">
+              <div class="overlay-text">Vista de Altura</div>
+            </div>
+            <div class="carrusel-item">
+              <img src="https://i.postimg.cc/wjfy9MmV/Screenshot-2026-11-04-17-45-02-543-com-android-chrome.jpg" alt="Eventos y Celebraciones">
+              <div class="overlay-text">Eventos Exclusivos</div>
+            </div>
+          </div>
+          
+          <div class="carrusel-dots" id="carruselDots">
+            <div class="dot active" onclick="irAImagen(0)"></div>
+            <div class="dot" onclick="irAImagen(1)"></div>
+            <div class="dot" onclick="irAImagen(2)"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCIA -->
+    <section id="experiencia" class="experiencia">
+      <div class="contenedor reveal">
+        <h2>El lugar perfecto para tus noches</h2>
+        <p>Ya sea para celebrar un cumpleaños, una cita especial o simplemente disfrutar de la mejor música y coctelería de la ciudad, en Terraza Ojeda Suite siempre hay un espacio para ti.</p>
+        <a onclick="abrirModal()" class="btn-hero btn-hero-primario">Asegura tu Mesa</a>
+      </div>
+    </section>
+
+    <!-- UBICACIÓN -->
+    <section id="ubicacion">
+      <div class="contenedor">
+        <div class="section-header reveal">
+          <h2>Nuestra Ubicación</h2>
+          <div class="linea"></div>
+          <p>Te esperamos para vivir una noche inolvidable en las alturas.</p>
+        </div>
+
+        <div class="ubicacion-box reveal">
+          <h3>Terraza Ojeda Suite</h3>
+          <p><span>Horario:</span> Todos los días de 6:00 PM a 3:00 AM.</p>
+          
+          <a href="https://maps.google.com/?q=Terraza+Ojeda+Suite,+Ciudad+Ojeda" target="_blank" class="btn-maps">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Ver Ubicación en Google Maps
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="contenedor reveal">
+        <img src="https://i.postimg.cc/rsvfXBb6/1793812701008.jpg" alt="Terraza Ojeda Suite" class="footer-logo">
+        
+        <div class="footer-social">
+          <a href="https://www.instagram.com/terrazaojedasuiteoficial/" target="_blank" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        
+        <p>© 2026 Terraza Ojeda Suite. Todos los derechos reservados. Ciudad Ojeda, Venezuela.</p>
+      </div>
+    </footer>
+
+</div> <!-- FIN PAGINA PRINCIPAL -->
+
+<!-- PÁGINA DE CATEGORÍA (SPA) -->
+<div id="pagina-categoria">
+  <div class="contenedor">
+    
+    <div class="header-categoria">
+      <button class="btn-volver" onclick="volverAlMenu()">← Volver al Menú</button>
+      <h2 id="tituloCategoria" class="titulo-categoria-page"></h2>
+      <div class="linea" style="width: 1px; height: 30px; background: var(--accent); margin: 20px auto 0;"></div>
+    </div>
+
+    <div class="grid-menu" id="lista-menu">
+      <!-- Los items se generan/filtran vía JS -->
+      <div class="menu-item menu-categoria entradas">
+        <img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Alitas">
+        <div class="menu-info"><h4>Alitas de Pollo</h4><p>Crujientes alitas con porción de papas francesas.</p><span class="precio">REF 10,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria ensaladas">
+        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Ensalada">
+        <div class="menu-info"><h4>Ensalada César</h4><p>Lechuga romana, crotones, tocineta, parmesano y aderezo de la casa.</p><span class="precio">REF 10,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria hamburguesas">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Hamburguesa">
+        <div class="menu-info"><h4>Hamburguesa Terraza</h4><p>Carne de res, queso cheddar, tocineta, vegetales y papas rústicas.</p><span class="precio">REF 12,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria sandwiches">
+        <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Sandwich">
+        <div class="menu-info"><h4>Club Sandwich</h4><p>Pollo, tocineta, lechuga, tomate y mayonesa en pan de sándwich.</p><span class="precio">REF 8,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria pizzas">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Pizza">
+        <div class="menu-info"><h4>Pizza Artesanal</h4><p>Masa madre, salsa pomodoro, mozzarella fresca y pepperoni.</p><span class="precio">REF 15,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria adicionales">
+        <img src="https://images.unsplash.com/photo-1576107232684-1279f390859f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Papas">
+        <div class="menu-info"><h4>Porción de Papas</h4><p>Papas fritas crujientes con sazonador de la casa.</p><span class="precio">REF 3,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria parrillas">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Carne">
+        <div class="menu-info"><h4>Punta Trasera</h4><p>Corte de res a la parrilla, acompañado de yuca frita.</p><span class="precio">REF 18,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria fuertes">
+        <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Plato Fuerte">
+        <div class="menu-info"><h4>Salmón a la Plancha</h4><p>Filete de salmón con vegetales al vapor y puré de papas.</p><span class="precio">REF 16,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria cocteles">
+        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Cóctel">
+        <div class="menu-info"><h4>Cóctel de la Casa</h4><p>Mezcla secreta de rones, frutas cítricas y un toque de menta.</p><span class="precio">REF 8,00</span></div>
+      </div>
+      <div class="menu-item menu-categoria licores">
+        <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="menu-img" alt="Licor">
+        <div class="menu-info"><h4>Whisky Etiqueta Negra</h4><p>Servido en las rocas o con agua con gas.</p><span class="precio">REF 10,00</span></div>
+      </div>
+    </div>
+  </div>
+</div> <!-- FIN PAGINA CATEGORIA -->
+
+<!-- MODAL RESERVA -->
+<div class="modal-overlay" id="modalOverlay" onclick="cerrarModal()"></div>
+<div class="modal-reserva" id="modalReserva">
+  <button class="btn-cerrar-modal" onclick="cerrarModal()">✕</button>
+  <h3>Reserva tu Mesa</h3>
+  <p>Asegura tu espacio para esta noche.</p>
+  
+  <form id="formReserva" onsubmit="enviarReserva(event)">
+    <div class="form-group">
+      <label>Nombre y Apellido</label>
+      <input type="text" id="inputNombre" required placeholder="Ej: Juan Pérez">
+    </div>
+    <div class="form-group">
+      <label>Fecha de la Reserva</label>
+      <input type="date" id="inputFecha" required>
+    </div>
+    <div class="form-group">
+      <label>Hora (A partir de las 6:00 PM)</label>
+      <input type="time" id="inputHora" required min="18:00">
+    </div>
+    <div class="form-group">
+      <label>Cantidad de Personas</label>
+      <input type="number" id="inputPersonas" required min="1" value="2">
+    </div>
+    
+    <button type="submit" class="btn-wa">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.5-.4zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.3c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+      Confirmar por WhatsApp
+    </button>
+  </form>
+</div>
+
+<script>
+  // =========================================
+  // CURSOR PERSONALIZADO
+  // =========================================
+  const cursorDot = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const interactables = document.querySelectorAll('a, button, .cat-card, .menu-item');
+  interactables.forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+
+  // =========================================
+  // HEADER SCROLL
+  // =========================================
+  const header = document.getElementById('mainHeader');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  // =========================================
+  // SPOTLIGHT EFFECT (Tarjetas)
+  // =========================================
+  document.querySelectorAll('.cat-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+
+  // =========================================
+  // NAVEGACIÓN SPA (Categorías)
+  // =========================================
+  function abrirCategoria(categoria, titulo) {
+    const paginaPrincipal = document.getElementById('pagina-principal');
+    const paginaCategoria = document.getElementById('pagina-categoria');
+    
+    paginaPrincipal.style.display = 'none';
+    paginaCategoria.style.display = 'block';
+    paginaCategoria.classList.remove('animar-pagina');
+    void paginaCategoria.offsetWidth; 
+    paginaCategoria.classList.add('animar-pagina');
+
+    document.getElementById('tituloCategoria').innerText = titulo;
+
+    const items = document.querySelectorAll('.menu-categoria');
+    items.forEach(item => {
+      if (item.classList.contains(categoria)) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    window.scrollTo(0, 0);
+    
+    document.querySelectorAll('#pagina-categoria a, #pagina-categoria button, #pagina-categoria .menu-item').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+  }
+
+  function volverAlMenu() {
+    const paginaPrincipal = document.getElementById('pagina-principal');
+    const paginaCategoria = document.getElementById('pagina-categoria');
+    
+    paginaCategoria.style.display = 'none';
+    paginaPrincipal.style.display = 'block';
+    
+    setTimeout(() => {
+      window.scrollTo({ top: document.getElementById('menu').offsetTop, behavior: 'smooth' });
+    }, 50);
+  }
+
+  // =========================================
+  // LÓGICA DEL CARRUSEL
+  // =========================================
+  const track = document.getElementById('carruselTrack');
+  const dots = document.querySelectorAll('.dot');
+  
+  function moverCarrusel(direccion) {
+    const anchoImagen = track.clientWidth; 
+    track.scrollBy({ left: anchoImagen * direccion, behavior: 'smooth' });
+  }
+
+  function irAImagen(index) {
+    const anchoImagen = track.clientWidth;
+    track.scrollTo({ left: anchoImagen * index, behavior: 'smooth' });
+  }
+
+  track.addEventListener('scroll', () => {
+    const anchoImagen = track.clientWidth;
+    const posicionScroll = track.scrollLeft;
+    const indiceActivo = Math.round(posicionScroll / anchoImagen);
+    
+    dots.forEach((dot, index) => {
+      if (index === indiceActivo) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  });
+
+  // =========================================
+  // MENÚ HAMBURGUESA
+  // =========================================
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburgerBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('activo');
+    hamburgerBtn.innerHTML = mobileMenu.classList.contains('activo') ? '✕' : '☰';
+  });
+
+  function cerrarMenu() {
+    mobileMenu.classList.remove('activo');
+    hamburgerBtn.innerHTML = '☰';
+  }
+
+  // =========================================
+  // LÓGICA DEL MODAL
+  // =========================================
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalReserva = document.getElementById('modalReserva');
+
+  function abrirModal() {
+    modalReserva.classList.add('activo');
+    modalOverlay.classList.add('activo');
+    document.getElementById('inputFecha').valueAsDate = new Date();
+  }
+
+  function cerrarModal() {
+    modalReserva.classList.remove('activo');
+    modalOverlay.classList.remove('activo');
+  }
+
+  // =========================================
+  // ENVIAR RESERVA A WHATSAPP
+  // =========================================
+  function enviarReserva(e) {
+    e.preventDefault();
+    const nombre = document.getElementById('inputNombre').value;
+    const fecha = document.getElementById('inputFecha').value;
+    const hora = document.getElementById('inputHora').value;
+    const personas = document.getElementById('inputPersonas').value;
+    
+    if (hora < "18:00") {
+      alert("Lo sentimos, el restaurante abre sus puertas a partir de las 6:00 PM. Por favor, selecciona una hora válida.");
+      return;
+    }
+
+    const fechaFormateada = fecha.split('-').reverse().join('/');
+    let mensaje = `¡Hola Terraza Ojeda Suite! 👋 Quisiera reservar una mesa.\n\n`;
+    mensaje += `👤 *A nombre de:* ${nombre}\n`;
+    mensaje += `📅 *Fecha:* ${fechaFormateada}\n`;
+    mensaje += `⏰ *Hora:* ${hora}\n`;
+    mensaje += `👥 *Personas:* ${personas}\n\n`;
+    mensaje += `¿Me confirman disponibilidad?`;
+
+    const numeroWA = '584129219389'; 
+    const urlWA = `https://wa.me/${numeroWA}?text=${encodeURIComponent(mensaje)}`;
+    
+    window.open(urlWA, '_blank');
+    cerrarModal();
+    document.getElementById('formReserva').reset();
+  }
+
+  // =========================================
+  // ANIMACIONES AL SCROLL
+  // =========================================
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { root: null, rootMargin: '0px', threshold: 0.15 });
+
+  revealElements.forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
